@@ -15,12 +15,12 @@ namespace IBShop_api.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class CatController : ControllerBase
     {
         private readonly IB_IBS_PortalContext _context;
         private readonly JWTSettings _jwtsettings;
 
-        public ValuesController(IB_IBS_PortalContext context, IOptions<JWTSettings> jwtsettings)
+        public CatController(IB_IBS_PortalContext context, IOptions<JWTSettings> jwtsettings)
         {
             _context = context;
             _jwtsettings = jwtsettings.Value;
