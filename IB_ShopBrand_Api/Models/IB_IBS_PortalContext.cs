@@ -8,6 +8,8 @@ namespace IB_ShopBrand_Api.Models
 {
     public partial class IB_IBS_PortalContext : DbContext
     {
+        
+
         public IB_IBS_PortalContext()
         {
         }
@@ -20,6 +22,7 @@ namespace IB_ShopBrand_Api.Models
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<IbsUser> IbsUsers { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
+   
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

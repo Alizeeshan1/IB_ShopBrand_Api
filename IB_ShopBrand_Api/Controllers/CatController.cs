@@ -26,32 +26,37 @@ namespace IBShop_api.Controllers
             _jwtsettings = jwtsettings.Value;
         }
 
-        [HttpPost("Login")]
-        public async Task<ActionResult<IbsUser>> Login([FromBody] IbsUser user)
+
+        [HttpPost("AddCategory")]
+        public async Task<ActionResult<Category>> AddCategory( Category catei)
         {
 
-            {
-                var ibUser = await _context.IbsUsers.FirstOrDefaultAsync(x => x.UserEmail == user.UserEmail && x.UserPassword == user.UserPassword);
-
-                if (ibUser == null)
-                {
-                    return NotFound();
-                }
+           try {
+                Category cate = new Category();
+                _context.Categories.Add(cate);
+                await _context.SaveChangesAsync();
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_jwtsettings.SecretKey);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.Name, user.UserEmail)
+                        new Claim(ClaimTypes.Name, cate.CategoryTitle)
                     }),
                     Expires = DateTime.UtcNow.AddMonths(6),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
-                ibUser.Token = tokenHandler.WriteToken(token);
-                return ibUser;
+                cate.Token = tokenHandler.WriteToken(token);
+                return cate;
+                //_context.Categories.Add(cate);
+                //await _context.SaveChangesAsync();
+                //return CreatedAtAction("Getcateg", new { id = cate.CategoryTitle }, cate);
+            }
+            catch (Exception )
+            {
+                return BadRequest();
             }
 
         }
