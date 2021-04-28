@@ -12,53 +12,61 @@ using System.Threading.Tasks;
 
 namespace IBShop_api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CatController : ControllerBase
     {
         private readonly IB_IBS_PortalContext _context;
-        private readonly JWTSettings _jwtsettings;
+        //private readonly JWTSettings _jwtsettings;
 
-        public CatController(IB_IBS_PortalContext context, IOptions<JWTSettings> jwtsettings)
+        public CatController(IB_IBS_PortalContext context/*, IOptions<JWTSettings> jwtsettings*/)
         {
             _context = context;
-            _jwtsettings = jwtsettings.Value;
+            //_jwtsettings = jwtsettings.Value;
         }
 
 
-        [HttpPost("AddCategory")]
-        public async Task<ActionResult<Category>> AddCategory( Category catei)
+        [HttpPost]
+        public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-
-           try {
-                Category cate = new Category();
-                _context.Categories.Add(cate);
+            _context.Categories.Add(category);
+            try
+            {
                 await _context.SaveChangesAsync();
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_jwtsettings.SecretKey);
-                var tokenDescriptor = new SecurityTokenDescriptor
+                if (CategoryExists(category.CategoryTitle))
                 {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, cate.CategoryTitle)
-                    }),
-                    Expires = DateTime.UtcNow.AddMonths(6),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                cate.Token = tokenHandler.WriteToken(token);
-                return cate;
-                //_context.Categories.Add(cate);
-                //await _context.SaveChangesAsync();
-                //return CreatedAtAction("Getcateg", new { id = cate.CategoryTitle }, cate);
+                    return NotFound();
+                }
+
+
+                //var tokenHandler = new JwtSecurityTokenHandler();
+                //var key = Encoding.ASCII.GetBytes(_jwtsettings.SecretKey);
+                //var tokenDescriptor = new SecurityTokenDescriptor
+                //{
+                //    Subject = new ClaimsIdentity(new Claim[]
+                //    {
+                //        new Claim(ClaimTypes.Name, category.CategoryTitle)
+                //    }),
+                //    Expires = DateTime.UtcNow.AddMonths(6),
+                //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                //    SecurityAlgorithms.HmacSha256Signature)
+                //};
+                //var token = tokenHandler.CreateToken(tokenDescriptor);
+                //category.Token = tokenHandler.WriteToken(token);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return BadRequest();
             }
+            
+            return CreatedAtAction("Getcategory", new { id = category.CategoryTitle }, category);
+        }
 
+        private bool CategoryExists(string categoryTitle)
+        {
+            throw new NotImplementedException();
         }
     }
 }
+

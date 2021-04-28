@@ -38,6 +38,8 @@ namespace IB_ShopBrand_Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "IB_ShopBrand_Api", Version = "v1" });
             });
 
+            // INJECTED
+
             services.AddDbContext<IB_IBS_PortalContext>(option =>
                option.UseSqlServer(Configuration.GetConnectionString("IB_IBS_Portal")));
 
@@ -82,7 +84,7 @@ namespace IB_ShopBrand_Api
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            //app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
