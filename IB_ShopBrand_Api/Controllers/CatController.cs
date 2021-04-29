@@ -12,18 +12,16 @@ using System.Threading.Tasks;
 
 namespace IBShop_api.Controllers
 {
-    //[Authorize]
+ 
     [Route("api/[controller]")]
     [ApiController]
     public class CatController : ControllerBase
     {
         private readonly IB_IBS_PortalContext _context;
-        //private readonly JWTSettings _jwtsettings;
-
-        public CatController(IB_IBS_PortalContext context/*, IOptions<JWTSettings> jwtsettings*/)
+    
+        public CatController(IB_IBS_PortalContext context)
         {
             _context = context;
-            //_jwtsettings = jwtsettings.Value;
         }
 
 
@@ -36,33 +34,15 @@ namespace IBShop_api.Controllers
                 await _context.SaveChangesAsync();
                 if (CategoryExists(category.CategoryTitle))
                 {
-                    return NotFound();
+                    return Conflict();
                 }
-
-
-                //var tokenHandler = new JwtSecurityTokenHandler();
-                //var key = Encoding.ASCII.GetBytes(_jwtsettings.SecretKey);
-                //var tokenDescriptor = new SecurityTokenDescriptor
-                //{
-                //    Subject = new ClaimsIdentity(new Claim[]
-                //    {
-                //        new Claim(ClaimTypes.Name, category.CategoryTitle)
-                //    }),
-                //    Expires = DateTime.UtcNow.AddMonths(6),
-                //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                //    SecurityAlgorithms.HmacSha256Signature)
-                //};
-                //var token = tokenHandler.CreateToken(tokenDescriptor);
-                //category.Token = tokenHandler.WriteToken(token);
             }
-            catch (Exception)
+            catch (DbUpdateException)
             {
                 return BadRequest();
             }
-            
             return CreatedAtAction("Getcategory", new { id = category.CategoryTitle }, category);
         }
-
         private bool CategoryExists(string categoryTitle)
         {
             throw new NotImplementedException();

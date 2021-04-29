@@ -8,27 +8,28 @@ namespace IB_ShopBrand_Api.Models
 {
     public partial class IB_IBS_PortalContext : DbContext
     {
-        
-
         public IB_IBS_PortalContext()
         {
+            
         }
 
         public IB_IBS_PortalContext(DbContextOptions<IB_IBS_PortalContext> options)
             : base(options)
         {
+         
         }
 
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<IbsUser> IbsUsers { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
-      
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Name=IB_IBS_Portal");
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=95.217.230.169;Database=IB_IBS_Portal;Trusted_Connection=False;User ID=IBS_Portal ;Password=7tajG@49;");
             }
         }
 
@@ -41,9 +42,7 @@ namespace IB_ShopBrand_Api.Models
             {
                 entity.ToTable("CATEGORIES", "dbo");
 
-                entity.Property(e => e.CategoryId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Category_ID");
+                entity.Property(e => e.CategoryId).HasColumnName("Category_ID");
 
                 entity.Property(e => e.Active)
                     .HasMaxLength(50)
@@ -53,6 +52,10 @@ namespace IB_ShopBrand_Api.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("Category_Title");
+
+                entity.Property(e => e.Token)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<IbsUser>(entity =>
@@ -129,6 +132,40 @@ namespace IB_ShopBrand_Api.Models
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__IBS_USERS__Role___3D5E1FD2");
+            });
+
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.ToTable("Products", "dbo");
+
+                entity.Property(e => e.ProductId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("Product_ID");
+
+                entity.Property(e => e.ProductColour)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("Product_Colour");
+
+                entity.Property(e => e.ProductModel)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("Product_Model");
+
+                entity.Property(e => e.ProductName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("Product_Name");
+
+                entity.Property(e => e.ProductPrice)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("Product_Price");
+
+                entity.Property(e => e.ProductType)
+                    .HasMaxLength(25)
+                    .IsUnicode(false)
+                    .HasColumnName("Product_Type");
             });
 
             modelBuilder.Entity<UserRole>(entity =>

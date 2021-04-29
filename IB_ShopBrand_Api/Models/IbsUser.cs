@@ -7,8 +7,6 @@ namespace IB_ShopBrand_Api.Models
 {
     public partial class IbsUser
     {
-        
-
         public int UserUnique { get; set; }
         public int RoleId { get; set; }
         public string UserName { get; set; }
