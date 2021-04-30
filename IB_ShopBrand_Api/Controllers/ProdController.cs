@@ -1,6 +1,7 @@
 ﻿using IB_ShopBrand_Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +23,15 @@ namespace IB_ShopBrand_Api.Controllers
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
             _context.Products.Add(product);
-            
             try
             {
-                await _context.SaveChangesAsync();
+                
+                await _context.SaveChangesAsync();               
             }
-            catch (Exception)
+            catch (DbUpdateException)
             {
-                return BadRequest();
+                    return BadRequest();
+              
             }
             return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
         }

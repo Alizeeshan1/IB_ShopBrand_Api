@@ -24,29 +24,21 @@ namespace IBShop_api.Controllers
             _context = context;
         }
 
-
-        [HttpPost]
+        [HttpPost("AddCategory")]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
             _context.Categories.Add(category);
             try
             {
                 await _context.SaveChangesAsync();
-                if (CategoryExists(category.CategoryTitle))
-                {
-                    return Conflict();
-                }
+                return Ok(category);
             }
             catch (DbUpdateException)
             {
                 return BadRequest();
             }
-            return CreatedAtAction("Getcategory", new { id = category.CategoryTitle }, category);
         }
-        private bool CategoryExists(string categoryTitle)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
 
